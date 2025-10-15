@@ -18,8 +18,10 @@ const NewProduct = () => {
     title: "",
     description: "",
     price: "",
-    imageUrl: "",
+    tags: "",
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -41,6 +43,18 @@ const NewProduct = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -59,12 +73,39 @@ const NewProduct = () => {
     }
 
     try {
+      let imageUrl = null;
+
+      // Upload image if provided
+      if (imageFile) {
+        const fileExt = imageFile.name.split('.').pop();
+        const fileName = `${session?.user.id}/${Math.random()}.${fileExt}`;
+        
+        const { error: uploadError } = await supabase.storage
+          .from('product-images')
+          .upload(fileName, imageFile);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('product-images')
+          .getPublicUrl(fileName);
+
+        imageUrl = publicUrl;
+      }
+
+      // Parse tags
+      const tags = formData.tags
+        .split(',')
+        .map(tag => tag.trim())
+        .filter(tag => tag.length > 0);
+
       const { error } = await supabase.from("products").insert({
         user_id: session?.user.id,
         title: formData.title,
         description: formData.description,
         price: price,
-        image_url: formData.imageUrl || null,
+        image_url: imageUrl,
+        tags: tags.length > 0 ? tags : null,
       });
 
       if (error) throw error;
@@ -148,18 +189,36 @@ const NewProduct = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="imageUrl">Image URL (Optional)</Label>
+                <Label htmlFor="image">Product Image (Optional)</Label>
                 <Input
-                  id="imageUrl"
-                  type="url"
-                  placeholder="https://example.com/image.jpg"
-                  value={formData.imageUrl}
+                  id="image"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+                {imagePreview && (
+                  <div className="mt-2">
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="w-full max-w-xs h-48 object-cover rounded-lg"
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="tags">Tags (Optional)</Label>
+                <Input
+                  id="tags"
+                  placeholder="e.g., electronics, phone, apple"
+                  value={formData.tags}
                   onChange={(e) =>
-                    setFormData({ ...formData, imageUrl: e.target.value })
+                    setFormData({ ...formData, tags: e.target.value })
                   }
                 />
                 <p className="text-sm text-muted-foreground">
-                  Paste a link to an image of your item
+                  Separate tags with commas
                 </p>
               </div>
 

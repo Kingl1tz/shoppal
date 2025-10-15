@@ -1,10 +1,46 @@
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { ArrowRight, Search, Package, MessageSquare } from "lucide-react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import heroImage from "@/assets/hero-image.jpg";
 
+interface Product {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  image_url: string | null;
+  tags: string[] | null;
+  created_at: string;
+}
+
 const Home = () => {
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    loadFeaturedProducts();
+  }, []);
+
+  const loadFeaturedProducts = async () => {
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(6);
+
+    if (error) {
+      console.error("Error loading products:", error);
+      return;
+    }
+
+    if (data) {
+      setFeaturedProducts(data);
+    }
+  };
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -46,8 +82,76 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Featured Listings */}
+      {featuredProducts.length > 0 && (
+        <section className="py-20 bg-muted/30">
+          <div className="container mx-auto px-4">
+            <div className="flex justify-between items-center mb-12">
+              <div>
+                <h2 className="text-3xl font-bold mb-2">Featured Listings</h2>
+                <p className="text-muted-foreground">Check out the latest items from our community</p>
+              </div>
+              <Link to="/items">
+                <Button variant="outline">
+                  View All
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featuredProducts.map((product) => (
+                <Link key={product.id} to={`/items/${product.id}`}>
+                  <Card className="h-full hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
+                    {product.image_url ? (
+                      <div className="aspect-video w-full overflow-hidden rounded-t-lg bg-muted">
+                        <img
+                          src={product.image_url}
+                          alt={product.title}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="aspect-video w-full bg-gradient-to-br from-primary/10 to-muted rounded-t-lg flex items-center justify-center">
+                        <Package className="h-16 w-16 text-muted-foreground/50" />
+                      </div>
+                    )}
+                    <CardHeader>
+                      <div className="flex justify-between items-start mb-2">
+                        <CardTitle className="line-clamp-1">{product.title}</CardTitle>
+                        <Badge variant="secondary" className="shrink-0 ml-2">
+                          ${product.price.toFixed(2)}
+                        </Badge>
+                      </div>
+                      <CardDescription className="line-clamp-2">
+                        {product.description}
+                      </CardDescription>
+                    </CardHeader>
+                    {product.tags && product.tags.length > 0 && (
+                      <CardFooter>
+                        <div className="flex flex-wrap gap-2">
+                          {product.tags.slice(0, 3).map((tag, index) => (
+                            <Badge key={index} variant="outline" className="text-xs">
+                              {tag}
+                            </Badge>
+                          ))}
+                          {product.tags.length > 3 && (
+                            <Badge variant="outline" className="text-xs">
+                              +{product.tags.length - 3}
+                            </Badge>
+                          )}
+                        </div>
+                      </CardFooter>
+                    )}
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Features Section */}
-      <section className="py-20 bg-muted/30">
+      <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Why Choose Shoppal?</h2>
@@ -86,7 +190,7 @@ const Home = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20">
+      <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <Card className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground p-12 text-center">
             <h2 className="text-3xl font-bold mb-4">Ready to Start Selling?</h2>
