@@ -83,13 +83,27 @@ const Dashboard = () => {
   };
 
   const fetchInterests = async () => {
+    // First get products owned by the user
+    const { data: userProducts } = await supabase
+      .from("products")
+      .select("id")
+      .eq("user_id", session?.user.id);
+
+    if (!userProducts || userProducts.length === 0) {
+      setInterests([]);
+      return;
+    }
+
+    const productIds = userProducts.map(p => p.id);
+
+    // Then get interests for those products
     const { data, error } = await supabase
       .from("interests")
       .select(`
         *,
         products (*)
       `)
-      .eq("products.user_id", session?.user.id);
+      .in("product_id", productIds);
 
     if (error) {
       console.error("Error fetching interests:", error);
