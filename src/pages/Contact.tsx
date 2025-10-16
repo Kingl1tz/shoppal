@@ -43,7 +43,7 @@ const Contact = () => {
               <Mail className="h-6 w-6 text-primary" />
             </div>
             <h3 className="font-semibold mb-2">Email Us</h3>
-            <p className="text-sm text-muted-foreground">support@shoppal.com</p>
+            <p className="text-sm text-muted-foreground">theshoppalofficial@gmail.com</p>
           </Card>
 
           <Card className="text-center p-6">

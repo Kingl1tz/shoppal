@@ -13,7 +13,7 @@ const HowItWorks = () => {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">How Shoppal Works</h1>
           <p className="text-lg text-muted-foreground">
-            Getting started is easy. Follow these simple steps to buy or sell items.
+            Getting started is easy. Follow these simple steps to share and borrow items in your community.
           </p>
         </div>
 
@@ -29,8 +29,8 @@ const HowItWorks = () => {
               <h2 className="text-2xl font-bold mb-4">Create Your Account</h2>
               <p className="text-muted-foreground mb-4">
                 Sign up for free in less than a minute. Provide your basic contact information
-                so buyers and sellers can reach you. Your information is kept secure and only
-                shared when you choose to connect with others.
+                so neighbors can reach you. Your information is kept secure and only
+                shared when you choose to connect with others in your community.
               </p>
               <Link to="/auth">
                 <Button>
@@ -67,12 +67,12 @@ const HowItWorks = () => {
                   2
                 </span>
               </div>
-              <h2 className="text-2xl font-bold mb-4">List or Browse Items</h2>
+              <h2 className="text-2xl font-bold mb-4">Share or Browse Items</h2>
               <p className="text-muted-foreground mb-4">
-                <strong>Selling?</strong> List your items with photos, descriptions, and pricing.
-                It's completely free to post. <br/><br/>
-                <strong>Buying?</strong> Browse thousands of items from our community. Use search
-                and filters to find exactly what you need.
+                <strong>Have something to share?</strong> List your items with photos and descriptions.
+                It's completely free to post. Mark items as borrowed when they're in use. <br/><br/>
+                <strong>Need something?</strong> Browse items from your community. Use search
+                to find exactly what you need and when you need it.
               </p>
               <Link to="/items">
                 <Button variant="outline">
@@ -90,11 +90,12 @@ const HowItWorks = () => {
                   3
                 </span>
               </div>
-              <h2 className="text-2xl font-bold mb-4">Connect & Complete</h2>
+              <h2 className="text-2xl font-bold mb-4">Connect & Borrow</h2>
               <p className="text-muted-foreground mb-4">
-                Found something you like? Click "Show Interest" to share your contact information
-                with the seller. Sellers will see who's interested in their items and can reach
-                out directly. Complete your transaction safely with direct communication.
+                Found something you need? Click "Show Interest" and select your desired dates.
+                Share your contact information with the owner. Owners will see who's interested
+                and when they need items, making it easy to coordinate. Build community connections
+                while sharing resources sustainably.
               </p>
             </div>
             <div className="order-1 md:order-2">
@@ -114,7 +115,7 @@ const HowItWorks = () => {
           <Card className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground p-8">
             <h2 className="text-2xl font-bold mb-4">Ready to Get Started?</h2>
             <p className="mb-6 opacity-90">
-              Join our growing community of buyers and sellers today.
+              Join our growing community of neighbors sharing and borrowing today.
             </p>
             <Link to="/auth">
               <Button size="lg" variant="secondary">

@@ -16,6 +16,8 @@ export type Database = {
     Tables: {
       interests: {
         Row: {
+          borrow_end_date: string | null
+          borrow_start_date: string | null
           contact_email: string
           contact_name: string
           contact_phone: string | null
@@ -26,6 +28,8 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          borrow_end_date?: string | null
+          borrow_start_date?: string | null
           contact_email: string
           contact_name: string
           contact_phone?: string | null
@@ -36,6 +40,8 @@ export type Database = {
           user_id: string
         }
         Update: {
+          borrow_end_date?: string | null
+          borrow_start_date?: string | null
           contact_email?: string
           contact_name?: string
           contact_phone?: string | null
@@ -68,6 +74,7 @@ export type Database = {
           description: string
           id: string
           image_url: string | null
+          is_borrowed: boolean
           price: number
           tags: string[] | null
           title: string
@@ -79,6 +86,7 @@ export type Database = {
           description: string
           id?: string
           image_url?: string | null
+          is_borrowed?: boolean
           price: number
           tags?: string[] | null
           title: string
@@ -90,6 +98,7 @@ export type Database = {
           description?: string
           id?: string
           image_url?: string | null
+          is_borrowed?: boolean
           price?: number
           tags?: string[] | null
           title?: string

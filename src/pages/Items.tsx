@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { Search, Plus } from "lucide-react";
 import { Session } from "@supabase/supabase-js";
+import { Badge } from "@/components/ui/badge";
 
 interface Product {
   id: string;
@@ -14,6 +15,7 @@ interface Product {
   price: number;
   image_url: string | null;
   created_at: string;
+  is_borrowed: boolean;
 }
 
 const Items = () => {
@@ -64,7 +66,7 @@ const Items = () => {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <div>
               <h1 className="text-3xl font-bold mb-2">Browse Items</h1>
-              <p className="text-muted-foreground">Discover great deals from our community</p>
+              <p className="text-muted-foreground">Discover and share items in your community</p>
             </div>
             {session && (
               <Link to="/dashboard/new-product">
@@ -98,7 +100,7 @@ const Items = () => {
               <Link key={product.id} to={`/items/${product.id}`}>
                 <Card className="h-full hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer">
                   <CardHeader className="p-0">
-                    <div className="aspect-square bg-muted rounded-t-lg overflow-hidden">
+                    <div className="aspect-square bg-muted rounded-t-lg overflow-hidden relative">
                       {product.image_url ? (
                         <img
                           src={product.image_url}
@@ -109,6 +111,11 @@ const Items = () => {
                         <div className="w-full h-full flex items-center justify-center text-muted-foreground">
                           No image
                         </div>
+                      )}
+                      {product.is_borrowed && (
+                        <Badge className="absolute top-2 right-2" variant="secondary">
+                          Borrowed
+                        </Badge>
                       )}
                     </div>
                   </CardHeader>

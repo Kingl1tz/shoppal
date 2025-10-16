@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
@@ -19,6 +20,7 @@ const NewProduct = () => {
     description: "",
     price: "",
     tags: "",
+    isBorrowed: false,
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -106,6 +108,7 @@ const NewProduct = () => {
         price: price,
         image_url: imageUrl,
         tags: tags.length > 0 ? tags : null,
+        is_borrowed: formData.isBorrowed,
       });
 
       if (error) throw error;
@@ -220,6 +223,19 @@ const NewProduct = () => {
                 <p className="text-sm text-muted-foreground">
                   Separate tags with commas
                 </p>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="isBorrowed"
+                  checked={formData.isBorrowed}
+                  onCheckedChange={(checked) =>
+                    setFormData({ ...formData, isBorrowed: checked as boolean })
+                  }
+                />
+                <Label htmlFor="isBorrowed" className="cursor-pointer">
+                  Mark as currently borrowed
+                </Label>
               </div>
 
               <Button type="submit" className="w-full" disabled={loading}>

@@ -50,11 +50,11 @@ const Home = () => {
           <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-center">
             <div className="space-y-6 animate-fade-in">
               <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-                Buy and Sell with{" "}
-                <span className="text-primary">Confidence</span>
+                Share and Borrow in Your{" "}
+                <span className="text-primary">Community</span>
               </h1>
               <p className="text-lg text-muted-foreground md:text-xl">
-                Join thousands of users buying and selling items in a safe, trusted marketplace. List your items for free and connect with buyers instantly.
+                Join your neighbors in sharing items you own and borrowing what you need. Build a stronger, more connected community.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/auth">
@@ -155,7 +155,7 @@ const Home = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Why Choose Shoppal?</h2>
-            <p className="text-lg text-muted-foreground">Everything you need for seamless buying and selling</p>
+            <p className="text-lg text-muted-foreground">Everything you need for seamless community sharing</p>
           </div>
           <div className="grid gap-8 md:grid-cols-3">
             <Card className="p-6 hover:shadow-lg transition-all hover:-translate-y-1">
@@ -164,16 +164,16 @@ const Home = () => {
               </div>
               <h3 className="text-xl font-semibold mb-2">Easy Discovery</h3>
               <p className="text-muted-foreground">
-                Browse through countless items with our intuitive search and filtering system. Find exactly what you're looking for.
+                Browse items from your neighbors. Find what you need and connect with people in your community who have it.
               </p>
             </Card>
             <Card className="p-6 hover:shadow-lg transition-all hover:-translate-y-1">
               <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                 <Package className="h-6 w-6 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">List Items Free</h3>
+              <h3 className="text-xl font-semibold mb-2">Share Items Free</h3>
               <p className="text-muted-foreground">
-                Post your items for sale at no cost. Add photos, descriptions, and set your price in minutes.
+                Listing items is completely free. Upload photos, share what you have, and help your community thrive.
               </p>
             </Card>
             <Card className="p-6 hover:shadow-lg transition-all hover:-translate-y-1">
@@ -182,7 +182,7 @@ const Home = () => {
               </div>
               <h3 className="text-xl font-semibold mb-3">Direct Connect</h3>
               <p className="text-muted-foreground">
-                Express interest in items and connect directly with sellers. No middleman, just simple communication.
+                Connect directly with your neighbors. Build relationships while sharing resources and reducing waste.
               </p>
             </Card>
           </div>
@@ -193,9 +193,9 @@ const Home = () => {
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <Card className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground p-12 text-center">
-            <h2 className="text-3xl font-bold mb-4">Ready to Start Selling?</h2>
+            <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
             <p className="text-lg mb-8 opacity-90">
-              Join our community of buyers and sellers today. It's free and takes less than a minute.
+              Join our community today and start sharing with your neighbors.
             </p>
             <Link to="/auth">
               <Button size="lg" variant="secondary">

@@ -5,10 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, CalendarIcon } from "lucide-react";
 import { Session } from "@supabase/supabase-js";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 interface Product {
   id: string;
@@ -31,6 +35,8 @@ const ProductDetail = () => {
     phone: "",
     message: "",
   });
+  const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndDate] = useState<Date>();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -77,8 +83,8 @@ const ProductDetail = () => {
       return;
     }
 
-    if (!formData.name.trim() || !formData.email.trim()) {
-      toast.error("Please fill in all required fields");
+    if (!formData.name.trim() || !formData.email.trim() || !startDate || !endDate) {
+      toast.error("Please fill in all required fields including dates");
       return;
     }
 
@@ -90,13 +96,17 @@ const ProductDetail = () => {
         contact_email: formData.email,
         contact_phone: formData.phone,
         message: formData.message,
+        borrow_start_date: format(startDate, "yyyy-MM-dd"),
+        borrow_end_date: format(endDate, "yyyy-MM-dd"),
       });
 
       if (error) throw error;
 
-      toast.success("Interest submitted! The seller will contact you soon.");
+      toast.success("Interest submitted! The owner will contact you soon.");
       setShowInterestForm(false);
       setFormData({ name: "", email: "", phone: "", message: "" });
+      setStartDate(undefined);
+      setEndDate(undefined);
     } catch (error: any) {
       if (error.code === "23505") {
         toast.error("You've already shown interest in this item");
@@ -171,9 +181,9 @@ const ProductDetail = () => {
             ) : (
               <Card>
                 <CardHeader>
-                  <CardTitle>Contact Seller</CardTitle>
+                  <CardTitle>Request to Borrow</CardTitle>
                   <CardDescription>
-                    Fill in your details to show interest in this item
+                    Fill in your details and select dates when you need this item
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -212,6 +222,62 @@ const ProductDetail = () => {
                         }
                       />
                     </div>
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div className="space-y-2">
+                        <Label>Start Date *</Label>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className={cn(
+                                "w-full justify-start text-left font-normal",
+                                !startDate && "text-muted-foreground"
+                              )}
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              {startDate ? format(startDate, "PPP") : "Pick a date"}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={startDate}
+                              onSelect={setStartDate}
+                              disabled={(date) => date < new Date()}
+                              initialFocus
+                              className="pointer-events-auto"
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>End Date *</Label>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className={cn(
+                                "w-full justify-start text-left font-normal",
+                                !endDate && "text-muted-foreground"
+                              )}
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              {endDate ? format(endDate, "PPP") : "Pick a date"}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={endDate}
+                              onSelect={setEndDate}
+                              disabled={(date) => !startDate || date < startDate}
+                              initialFocus
+                              className="pointer-events-auto"
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    </div>
                     <div className="space-y-2">
                       <Label htmlFor="message">Message (Optional)</Label>
                       <Textarea
@@ -221,6 +287,7 @@ const ProductDetail = () => {
                         onChange={(e) =>
                           setFormData({ ...formData, message: e.target.value })
                         }
+                        placeholder="Tell the owner when and why you need this item..."
                       />
                     </div>
                     <div className="flex gap-2">
