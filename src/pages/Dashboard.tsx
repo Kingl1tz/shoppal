@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { Session } from "@supabase/supabase-js";
-import { Plus, Package, Heart, User } from "lucide-react";
+import { Plus, Package, Heart, User, Pencil } from "lucide-react";
 import { toast } from "sonner";
 
 interface Product {
@@ -212,6 +212,11 @@ const Dashboard = () => {
                         <Link to={`/items/${product.id}`} className="flex-1">
                           <Button variant="outline" className="w-full">
                             View
+                          </Button>
+                        </Link>
+                        <Link to={`/dashboard/edit-product/${product.id}`}>
+                          <Button variant="secondary">
+                            <Pencil className="h-4 w-4" />
                           </Button>
                         </Link>
                         <Button
